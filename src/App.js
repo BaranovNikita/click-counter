@@ -9,11 +9,17 @@ class App extends Component {
     }
   }
 
+  increment = () => {
+    this.setState(state => ({
+      counter: state.counter + 1
+    }))
+  }
+
   render () {
     return (
       <div data-test="component-app">
-        <h1 data-test="counter-display">The counter is correctly</h1>
-        <button data-test="increment-button">Increment</button>
+        <h1 data-test="counter-display">{this.state.counter}</h1>
+        <button data-test="increment-button" onClick={this.increment}>Increment</button>
       </div>
     );
   }

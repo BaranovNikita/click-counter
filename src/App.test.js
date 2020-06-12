@@ -13,7 +13,11 @@ Enzyme.configure({ adapter: new EnzymeAdapter() })
  * @returns {ShallowWrapper<React.Component["props"], React.Component["state"], React.Component>}
  */
 const setup = (props = {}, state = null) => {
-  return shallow(<App {...props} />)
+  const wrapper = shallow(<App {...props} />)
+  if (state) {
+    wrapper.setState(state)
+  }
+  return wrapper
 }
 
 /**
@@ -48,5 +52,11 @@ test('counter starts at 0', () => {
   expect(initialWrapperState).toBe(0)
 })
 test('clicking button increments counter display', () => {
+  const counter = 7
+  const wrapper = setup(null, { counter })
+  const button = findByTestAttribute(wrapper, 'increment-button')
+  button.simulate('click')
 
+  const counterDisplay = findByTestAttribute(wrapper, 'counter-display')
+  expect(counterDisplay.text()).toContain(counter + 1)
 })
