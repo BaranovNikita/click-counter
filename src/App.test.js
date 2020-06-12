@@ -41,6 +41,11 @@ test('renders increment button', () => {
   const button = findByTestAttribute(wrapper, 'increment-button')
   expect(button.length).toBe(1)
 })
+test('renders decrement button', () => {
+  const wrapper = setup()
+  const button = findByTestAttribute(wrapper, 'decrement-button')
+  expect(button.length).toBe(1)
+})
 test('renders counter display', () => {
   const wrapper = setup()
   const counter = findByTestAttribute(wrapper, 'counter-display')
@@ -58,5 +63,43 @@ test('clicking button increments counter display', () => {
   button.simulate('click')
 
   const counterDisplay = findByTestAttribute(wrapper, 'counter-display')
-  expect(counterDisplay.text()).toContain(counter + 1)
+  expect(counterDisplay.text()).toBe(`${counter + 1}`)
+})
+test('clicking decrement button decrement counter', () => {
+  const counter = 7
+  const wrapper = setup(null, { counter })
+  const button = findByTestAttribute(wrapper, 'decrement-button')
+  button.simulate('click')
+
+  const counterDisplay = findByTestAttribute(wrapper, 'counter-display')
+  expect(counterDisplay.text()).toBe(`${counter - 1}`)
+})
+test('error is not exists', () => {
+  const wrapper = setup()
+  const error = findByTestAttribute(wrapper, 'error')
+  expect(error.length).toBe(0)
+})
+test('error is exists', () => {
+  const wrapper = setup(null, { error: 'Test error '})
+  const error = findByTestAttribute(wrapper, 'error')
+  expect(error.length).toBe(1)
+})
+test('decrement zero throws error', () => {
+  const counter = 0
+  const wrapper = setup(null, { counter })
+  const button = findByTestAttribute(wrapper, 'decrement-button')
+  button.simulate('click')
+
+  const counterDisplay = findByTestAttribute(wrapper, 'counter-display')
+  expect(counterDisplay.text()).toBe(`${counter}`)
+  const error = findByTestAttribute(wrapper, 'error')
+  expect(error.length).toBe(1)
+  expect(error.text()).toBe('The counter can\'t go below zero')
+})
+test('increment clear error', () => {
+  const counter = 0
+  const wrapper = setup(null, { counter, error: 'The counter can\'t go below zero' })
+  const button = findByTestAttribute(wrapper, 'increment-button')
+  button.simulate('click')
+  expect(wrapper.state('error')).toBeFalsy()
 })
