@@ -43,7 +43,9 @@ test('renders counter display', () => {
   expect(counter.length).toBe(1)
 })
 test('counter starts at 0', () => {
-
+  const wrapper = setup()
+  const initialWrapperState = wrapper.state('counter')
+  expect(initialWrapperState).toBe(0)
 })
 test('clicking button increments counter display', () => {
 
